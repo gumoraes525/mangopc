@@ -1,6 +1,6 @@
 # Mango68k
 
-Mango68k is an experimental emulator for classic Apple Macintosh computers based on the Motorola 68K CPU family, forked from the PearPC project. Its initial goal is to accurately emulate the Macintosh 128K, with a roadmap to support the full range of 68K-based Macs._
+_Mango68k is an experimental emulator for classic Apple Macintosh computers based on the Motorola 68K CPU family, forked from the PearPC project. Its initial goal is to accurately emulate the Macintosh 128K, with a roadmap to support the full range of 68K-based Macs._
 
 ---
 
