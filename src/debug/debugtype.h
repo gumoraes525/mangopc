@@ -1,125 +1,167 @@
 #ifndef EVALTYPE_H
 #define EVALTYPE_H
 
-#define MAX_EVALFUNC_PARAMS	8
+#define MAX_EVALFUNC_PARAMS 8
 
 #include "system/types.h"
 
 /*
- *	Types
+ * ============================
+ * Integer display / size hints
+ * ============================
  */
 
 typedef enum {
-	TYPE_UNKNOWN,
-	TYPE_BYTE,
-	TYPE_HALF,
-	TYPE_WORD,
-	TYPE_DWORD,
+    TYPE_UNKNOWN,
+    TYPE_BYTE,     /* 8-bit  */
+    TYPE_HALF,     /* 16-bit */
+    TYPE_WORD,     /* 32-bit */
+    TYPE_DWORD,    /* 64-bit */
 } eval_inttype;
 
+/*
+ * ============================
+ * Mango68k register types
+ * ============================
+ *
+ * Motorola 68000 has:
+ *  - D0–D7  (data registers)
+ *  - A0–A7  (address registers, A7 = SP)
+ *  - PC     (program counter)
+ *  - SR     (status register)
+ */
+
 typedef enum {
-	REG_GPR,
-	REG_FPR,
-	REG_PC,
-	REG_CR,
-	REG_LR,
-	REG_CTR,
-	REG_XER,
-	REG_MSR,
-	REG_SRR0,
-	REG_SRR1,
+    REG_DREG,   /* D0–D7 */
+    REG_AREG,   /* A0–A7 */
+    REG_PC,     /* Program Counter */
+    REG_SR      /* Status Register */
 } eval_regtype;
 
+/*
+ * ============================
+ * Scalar value containers
+ * ============================
+ */
+
 struct eval_int {
-	sint64 value;
-	eval_inttype type;
+    sint64 value;         /* internal math uses 64-bit */
+    eval_inttype type;    /* display / truncation hint */
 };
 
 struct eval_float {
-	double value;
+    double value;
 };
 
 struct eval_str {
-	char *value;
-	int len;
+    char *value;
+    int len;
 };
 
 struct eval_reg {
-	eval_regtype type;
-	int num;
+    eval_regtype type;
+    int num;              /* register index (D0=0, A0=0) */
 };
 
 struct eval_scalar;
 
+/*
+ * ============================
+ * Function call representation
+ * ============================
+ */
+
 struct eval_function {
-	char *name;
-	int param_count;
-	struct eval_scalar *params;
+    char *name;
+    int param_count;
+    struct eval_scalar *params;
 };
 
+/*
+ * ============================
+ * Scalar types
+ * ============================
+ */
+
 typedef enum {
-	SCALAR_EMPTY = 0,
-	SCALAR_INT,
-	SCALAR_REG,
-	SCALAR_STR,
-	SCALAR_FLOAT,
-	SCALAR_FUNCTION,
-	SCALAR_ANY,
-	SCALAR_VARARGS,
+    SCALAR_EMPTY = 0,
+    SCALAR_INT,
+    SCALAR_REG,
+    SCALAR_STR,
+    SCALAR_FLOAT,
+    SCALAR_FUNCTION,
+    SCALAR_ANY,
+    SCALAR_VARARGS,
 } eval_scalartype;
 
 typedef union {
-	struct eval_int integer;
-	struct eval_str str;
-	struct eval_reg reg;
-	struct eval_float floatnum;
-	struct eval_function function;
+    struct eval_int      integer;
+    struct eval_str      str;
+    struct eval_reg      reg;
+    struct eval_float    floatnum;
+    struct eval_function function;
 } eval_scalarbody;
 
 struct eval_scalar {
-	eval_scalartype type;
-	eval_scalarbody scalar;
+    eval_scalartype type;
+    eval_scalarbody scalar;
 };
+
+/*
+ * ============================
+ * Scalar list (for functions)
+ * ============================
+ */
 
 struct eval_scalarlist {
-	int count;
-	struct eval_scalar *scalars;
+    int count;
+    struct eval_scalar *scalars;
 };
 
+/*
+ * ============================
+ * Debugger commands
+ * ============================
+ */
+
 typedef enum {
-	COMMAND_NOP = 0,
-	COMMAND_PRINT,
-	COMMAND_REGS,
-	COMMAND_FLOATS,
-	COMMAND_SETREG,
-	COMMAND_BREAK,
-	COMMAND_LIST_BREAK,
-	COMMAND_STEP,
-	COMMAND_NEXT,
-	COMMAND_CONTINUE,
-	COMMAND_QUIT,
-	COMMAND_E2P,
-	COMMAND_INSPECT_BYTE,
-	COMMAND_INSPECT_HALF,
-	COMMAND_INSPECT_WORD,
-	COMMAND_INSPECT_DWORD,
-	COMMAND_INSPECT_STRING,
-	COMMAND_INSPECT_MEM,
-	COMMAND_WATCH,
-	COMMAND_WATCH_BYTE,
-	COMMAND_WATCH_HALF,
-	COMMAND_WATCH_WORD,
-        COMMAND_WATCH_DWORD,
-        COMMAND_DELETE_WATCH,
-	COMMAND_DUMP,
-	COMMAND_DISASM,
-	COMMAND_HELP,
+    COMMAND_NOP = 0,
+    COMMAND_PRINT,
+    COMMAND_REGS,
+    COMMAND_SETREG,
+    COMMAND_BREAK,
+    COMMAND_LIST_BREAK,
+    COMMAND_STEP,
+    COMMAND_NEXT,
+    COMMAND_CONTINUE,
+    COMMAND_QUIT,
+    COMMAND_INSPECT_BYTE,
+    COMMAND_INSPECT_HALF,
+    COMMAND_INSPECT_WORD,
+    COMMAND_INSPECT_DWORD,
+    COMMAND_INSPECT_STRING,
+    COMMAND_INSPECT_MEM,
+    COMMAND_WATCH,
+    COMMAND_WATCH_BYTE,
+    COMMAND_WATCH_HALF,
+    COMMAND_WATCH_WORD,
+    COMMAND_WATCH_DWORD,
+    COMMAND_DELETE_WATCH,
+    COMMAND_DUMP,
+    COMMAND_DISASM,
+    COMMAND_HELP,
 } eval_commandtype;
 
+/*
+ * ============================
+ * Parsed command
+ * ============================
+ */
+
 struct eval_command {
-	eval_commandtype	type;
-	int			paramcount;
-	struct eval_scalar	param[3]; /* 3 ought to be enough for everybody ;) */
+    eval_commandtype type;
+    int              paramcount;
+    struct eval_scalar param[3]; /* still enough */
 };
 
 #endif /* EVALTYPE_H */
