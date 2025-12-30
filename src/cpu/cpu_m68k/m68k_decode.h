@@ -1,6 +1,9 @@
 #ifndef __M68K_DECODE_H__
 #define __M68K_DECODE_H__
 
-void m68k_exec_opc(void);
+#include "system/types.h"
 
-#endif
+/* Decode and dispatch a 68000 opcode */
+void m68k_decode_and_exec(uint16 opcode);
+
+#endif /* __M68K_DECODE_H__ */
