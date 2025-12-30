@@ -1,20 +1,41 @@
 /*
  * Mango68k
  * m68k_decode.c
+ *
+ * 68000 instruction decoder / dispatcher
  */
 
-#include "m68k_cpu.h"
-#include "m68k_decode.h"
-#include "system/arch/sysendian.h"
+#include "cpu/m68k_cpu.h"
+#include "cpu/m68k_decode.h"
+#include "cpu/m68k_exec.h"
 #include "debug/debug.h"
 
-void m68k_exec_opc(void)
+void m68k_decode_and_exec(uint16 opcode)
 {
-    /* Fetch next opcode (68000 = 16-bit) */
-    uint16 opcode = m68k_fetch_word();
+    gCPU.current_opcode = opcode;
 
-    /* Temporary: stop execution so we know decode is wired */
-    SINGLESTEP("m68k opcode: %04x", opcode);
+    /* Debug: single-step trace */
+    SINGLESTEP("M68K opcode @%08x: %04x", gCPU.pc, opcode);
 
-    /* Advance PC already handled by fetch */
+    /* Decode primary opcode groups (top 4 bits) */
+    switch (opcode & 0xF000) {
+
+        case 0x0000:
+            m68k_exec_group_0(opcode);
+            break;
+
+        case 0x1000:
+            m68k_exec_group_1(opcode);
+            break;
+
+        case 0x2000:
+            m68k_exec_group_2(opcode);
+            break;
+
+        /* ... */
+
+        default:
+            m68k_raise_exception(M68K_EXC_ILLEGAL);
+            break;
+    }
 }
