@@ -58,3 +58,11 @@ void m68k_cpu_set_pc(int cpu, uint32 value)
 {
     gCPU.pc = value;
 }
+
+uint16 m68k_fetch_word(void)
+{
+    uint16 val;
+    mem_read_word(gCPU.pc, &val);
+    gCPU.pc += 2;
+    return val;
+}
