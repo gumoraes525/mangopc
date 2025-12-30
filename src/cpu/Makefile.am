@@ -1,20 +1,10 @@
 AUTOMAKE_OPTIONS = foreign
 
-if USE_CPU_GENERIC
-THE_ARCH_DIR=cpu_generic
-endif
+# Mango68k CPU backend (interpreter only)
+THE_CPU_DIR = cpu_m68k
 
-if USE_CPU_JITC_X86
-THE_ARCH_DIR=cpu_jitc_x86
-endif
+SUBDIRS = $(THE_CPU_DIR)
 
-if USE_CPU_JITC_X86_64
-THE_ARCH_DIR=cpu_jitc_x86_64
-endif
-
-EXTRA_DIST = cpu.h debug.h mem.h common.h
-
-SUBDIRS = $(THE_ARCH_DIR)
-EXTRA_SUBDIRS = cpu_jitc_generic cpu_jitc_x86 cpu_jitc_x86_64
+EXTRA_DIST = cpu.h debug.h mem.h
 
 AM_CPPFLAGS = -I ..
