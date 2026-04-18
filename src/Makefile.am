@@ -1,6 +1,6 @@
 AUTOMAKE_OPTIONS = foreign
 
-bin_PROGRAMS	= ppc
+bin_PROGRAMS	= m68k
 
 SUBDIRS		= cpu debug io system tools
 
