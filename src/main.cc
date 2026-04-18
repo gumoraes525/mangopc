@@ -182,7 +182,7 @@ void testforth()
  */
 void usage() 
 {
-	ht_printf("usage: ppc configfile\n");
+	ht_printf("usage: m68k configfile\n");
 	exit(1);
 }
 
